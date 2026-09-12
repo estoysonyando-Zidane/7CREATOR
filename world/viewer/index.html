@@ -244,6 +244,16 @@
         const o = new THREE.Mesh(new THREE.TubeGeometry(curve, 48, 0.22, 6, false), mat(color, { emissive: true, opacity: 0.8 }));
         g.add(o); break;
       }
+      case 'trail': {
+        for (let i = 0; i < shape.count; i++) {
+          const a = rad(shape.from + (shape.to - shape.from) * (i / (shape.count - 1)));
+          const o = new THREE.Mesh(new THREE.BoxGeometry(shape.size * 2.2, shape.size * 0.5, shape.size), m());
+          o.position.set(Math.cos(a) * shape.r + p[0], p[1], Math.sin(a) * shape.r + p[2]);
+          o.rotation.y = -a;
+          g.add(o);
+        }
+        break;
+      }
       case 'net': {
         for (let i = 1; i <= shape.rings; i++) {
           const o = new THREE.Mesh(new THREE.TorusGeometry(shape.r * (i / shape.rings), 0.12, 6, 60),
