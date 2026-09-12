@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 # 世界の様子を1枚の絵として書き出す。
 #   usage: tools/shot.sh world/scenes/round-005.html world/images/round-005.png
+#
+# 注意：このChromiumはウィンドウ高から約75px引いた高さまでしか描画しない。
+# 書き出しは1600x1000だが、描いてよいのは y<920 まで。下端は黒帯になる。
 set -euo pipefail
 
 src="$1"
