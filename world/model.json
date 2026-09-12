@@ -1,0 +1,264 @@
+{
+  "unit": "一歩",
+  "note": "7人の発言だけがこの世界を変える。矛盾は解消せず、同じ場所に重ねて持つ（variants）。",
+  "round": 8,
+  "entities": [
+    {
+      "id": "light",
+      "born": 1,
+      "by": "一途者",
+      "name": "光",
+      "quote": "光だ。まず光。それ以外ありえない",
+      "shape": { "type": "sphere", "p": [0, 48, 0], "r": 9 },
+      "color": "#ffe6b0",
+      "emissive": true,
+      "variants": [
+        {
+          "by": "理想主義者",
+          "quote": "なぜ光なのか。無のままで完全に整っていた",
+          "shape": { "type": "sphere", "p": [0, 48, 0], "r": 13 },
+          "wire": true
+        }
+      ]
+    },
+    {
+      "id": "lid",
+      "born": 1,
+      "by": "道具屋",
+      "name": "蓋",
+      "quote": "光に被せて消せるやつ。完全には暗くならないけどね、端から漏れる",
+      "shape": { "type": "dome", "p": [0, 48, 0], "r": 40 },
+      "color": "#0d1120",
+      "variants": [
+        {
+          "by": "深読み屋",
+          "quote": "蓋が耐えきれずに軋んでるんだ。君が踊ってるのは悲鳴の上だよ",
+          "shape": { "type": "dome", "p": [0, 48, 0], "r": 41.5 },
+          "wire": true,
+          "pulse": true
+        }
+      ]
+    },
+    {
+      "id": "rim",
+      "born": 2,
+      "by": "一途者",
+      "name": "縁",
+      "quote": "縁に住む。決めた。おれたちは縁の生き物だ",
+      "shape": { "type": "ring", "p": [0, 48, 0], "r": 40, "tube": 0.4 },
+      "color": "#ffcf7a",
+      "emissive": true
+    },
+    {
+      "id": "ledges",
+      "born": 2,
+      "by": "道具屋",
+      "name": "縁の足場",
+      "quote": "漏れた光を固めたやつ。踏めるけど、暗くなると溶ける",
+      "shape": { "type": "arc_slabs", "p": [0, 47, 0], "r": 43, "count": 9, "from": -70, "to": 70, "size": [9, 0.8, 5] },
+      "color": "#ffd489",
+      "melts_at_night": true,
+      "variants": [
+        {
+          "by": "理想主義者",
+          "quote": "まだ地面がない。足を置く場所を定義してから住め",
+          "shape": { "type": "arc_slabs", "p": [0, 47, 0], "r": 43, "count": 9, "from": -70, "to": 70, "size": [9, 0.8, 5] },
+          "wire": true
+        }
+      ]
+    },
+    {
+      "id": "far_ledges",
+      "born": 8,
+      "by": "皮肉屋",
+      "name": "向こう側の縁",
+      "quote": "じゃあ向こう側の縁も縁か。ここから見えないだけで",
+      "shape": { "type": "arc_slabs", "p": [0, 47, 0], "r": 43, "count": 9, "from": 110, "to": 250, "size": [9, 0.8, 5] },
+      "color": "#6a7490",
+      "melts_at_night": true
+    },
+    {
+      "id": "dancers",
+      "born": 2,
+      "by": "享楽主義者",
+      "name": "縁で踊る者",
+      "quote": "漏れてる光、いい感じじゃん。俺そこで踊るわ",
+      "shape": { "type": "motes", "p": [40, 48.6, 0], "spread": [7, 1.2, 4], "count": 14, "r": 0.45 },
+      "color": "#ffeec9",
+      "emissive": true
+    },
+    {
+      "id": "cycle",
+      "born": 3,
+      "by": "一途者",
+      "name": "昼と夜",
+      "quote": "溶ける前を昼、溶けたあとを夜と呼ぶ。決めた。以上",
+      "shape": { "type": "clock", "p": [0, 48, 0], "r": 46 },
+      "color": "#8ea0c8",
+      "variants": [
+        {
+          "by": "深読み屋",
+          "quote": "名づけるというのは、失くす準備をすることだよ",
+          "shape": { "type": "clock", "p": [0, 48, 0], "r": 47.5 },
+          "wire": true
+        }
+      ]
+    },
+    {
+      "id": "frame",
+      "born": 4,
+      "by": "道具屋",
+      "name": "枠",
+      "quote": "夜が来る前に形を写す枠。写せるのは一日ひとつだけね",
+      "shape": { "type": "frame", "p": [43, 40, 0], "size": [10, 8, 0.6], "face": "out" },
+      "color": "#b9c6e4",
+      "variants": [
+        {
+          "by": "理想主義者",
+          "quote": "選別を娯楽でやるな。何を残すかがこの世界の骨格になる",
+          "shape": { "type": "frame", "p": [43, 40, 0], "size": [13, 11, 0.4], "face": "out" },
+          "wire": true
+        }
+      ]
+    },
+    {
+      "id": "stone_today",
+      "born": 6,
+      "by": "享楽主義者",
+      "name": "同じ石",
+      "quote": "同じ石のどこが悪いんだよ。俺は三日ともちゃんと楽しかったけど",
+      "shape": { "type": "stone", "p": [43, 40, 0], "r": 2.6 },
+      "color": "#ffd489"
+    },
+    {
+      "id": "stone_records",
+      "born": 6,
+      "by": "理想主義者",
+      "name": "三日分の記録",
+      "quote": "三日続けて同じ石だぞ。これは記録ではなく怠慢だ",
+      "shape": { "type": "stone_row", "p": [43, 40, 9], "r": 2.6, "count": 2, "gap": 7, "axis": "z" },
+      "color": "#6f7ca0",
+      "wire": true
+    },
+    {
+      "id": "ear",
+      "born": 6,
+      "by": "道具屋",
+      "name": "耳",
+      "quote": "代わりに枠へ耳をつけとくよ。入れた形の音が底まで届く",
+      "shape": { "type": "torus", "p": [43, 43, -6], "r": 2.2, "tube": 0.5, "rot": [0, 0, 1.5708] },
+      "color": "#b9c6e4"
+    },
+    {
+      "id": "sound",
+      "born": 6,
+      "by": "道具屋",
+      "name": "底へ降りていく音",
+      "quote": "入れた形の音が底まで届く",
+      "shape": { "type": "rings_down", "p": [43, 36, 0], "to": [43, -18, 0], "count": 9, "r0": 2, "r1": 11 },
+      "color": "#aab6d2"
+    },
+    {
+      "id": "sediment",
+      "born": 5,
+      "by": "感傷屋",
+      "name": "選ばれなかった形の層",
+      "quote": "枠に選ばれなかった形が、夜ごと同じ場所へ沈んでいく。底のほうは、もうぶ厚い",
+      "shape": { "type": "disc", "p": [0, -20, 0], "r": 170, "h": 14 },
+      "color": "#1b2136",
+      "variants": [
+        {
+          "by": "深読み屋",
+          "quote": "沈んだ層のほうが重い。いずれ上の世界は、その重さの上に浮いているだけになる",
+          "shape": { "type": "disc", "p": [0, -34, 0], "r": 150, "h": 26 },
+          "wire": true
+        }
+      ]
+    },
+    {
+      "id": "debris",
+      "born": 5,
+      "by": "深読み屋",
+      "name": "溶けた形",
+      "quote": "世界の本体は枠の外で溶けた側だよ",
+      "shape": { "type": "motes", "p": [0, -14, 0], "spread": [140, 3, 140], "count": 90, "r": 1.4 },
+      "color": "#38425f"
+    },
+    {
+      "id": "diver",
+      "born": 5,
+      "by": "一途者",
+      "name": "潜った者",
+      "quote": "なら潜る。おれは底を見に行く",
+      "shape": { "type": "sphere", "p": [22, -24, 14], "r": 1.4 },
+      "color": "#cfd6e6",
+      "wire": true
+    },
+    {
+      "id": "echo",
+      "born": 7,
+      "by": "深読み屋",
+      "name": "反響",
+      "quote": "少し遅れて、少し重い。底を通った音は、通った分だけ何かを連れてくる",
+      "shape": { "type": "arc_up", "from": [43, -16, 0], "to": [56, 26, -8], "lift": 22, "count": 30 },
+      "color": "#c6d0e6"
+    },
+    {
+      "id": "dish",
+      "born": 7,
+      "by": "道具屋",
+      "name": "皿",
+      "quote": "皿の上で一度だけ立ち上がって、すぐ崩れる",
+      "shape": { "type": "dish", "p": [56, 26, -8], "r": 5 },
+      "color": "#9fb0d6"
+    },
+    {
+      "id": "risen",
+      "born": 7,
+      "by": "感傷屋",
+      "name": "一度だけ立ち上がる形",
+      "quote": "一度だけ立ち上がって崩れる。それ、思い出とまったく同じ仕組みじゃない",
+      "shape": { "type": "cone", "p": [56, 30, -8], "r": 2.4, "h": 7 },
+      "color": "#e7d6b4",
+      "crumbles": true,
+      "variants": [
+        {
+          "by": "理想主義者",
+          "quote": "崩れるものを世界に数えるな。……いや。数えないなら、この世界には結局なにも残らないのか",
+          "shape": { "type": "cone", "p": [56, 30, -8], "r": 3.4, "h": 9 },
+          "wire": true
+        }
+      ]
+    },
+    {
+      "id": "center",
+      "born": 8,
+      "by": "理想主義者",
+      "name": "中心",
+      "quote": "輪なら中心がある。中心から等しい距離にあるものだけが、縁を名乗れ",
+      "shape": { "type": "axis", "p": [0, 48, 0], "h": 90 },
+      "color": "#9fd7ff",
+      "wire": true
+    },
+    {
+      "id": "cord",
+      "born": 8,
+      "by": "道具屋",
+      "name": "紐",
+      "quote": "向こうまでの距離を測る紐を出すよ。ただしこの紐、昼のあいだしか伸びない",
+      "shape": { "type": "cord", "from": [43, 48.4, 0], "to": [-43, 48.4, 0], "sag": 9 },
+      "color": "#ffd489",
+      "only_daytime": true
+    },
+    {
+      "id": "hidden_side",
+      "born": 8,
+      "by": "深読み屋",
+      "name": "隠れる場所",
+      "quote": "見えない側があると認めたね。世界はさっき、隠れる場所を手に入れた",
+      "shape": { "type": "shell", "p": [0, 30, 0], "r": 52, "from": 110, "to": 250 },
+      "color": "#2a3350",
+      "wire": true
+    }
+  ]
+}
