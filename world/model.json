@@ -1,7 +1,7 @@
 {
   "unit": "一歩",
   "note": "7人の発言だけがこの世界を変える。矛盾は解消せず、同じ場所に重ねて持つ（variants）。",
-  "round": 8,
+  "round": 9,
   "entities": [
     {
       "id": "light",
@@ -249,6 +249,39 @@
       "shape": { "type": "cord", "from": [43, 48.4, 0], "to": [-43, 48.4, 0], "sag": 9 },
       "color": "#ffd489",
       "only_daytime": true
+    },
+    {
+      "id": "nameless",
+      "born": 9,
+      "by": "理想主義者",
+      "name": "名前のない場所",
+      "quote": "そこは中心の真下だ。縁ではない。名前のない場所に立つな",
+      "shape": { "type": "sphere", "p": [0, 39.4, 0], "r": 3.2 },
+      "color": "#9fd7ff",
+      "wire": true,
+      "variants": [
+        {
+          "by": "享楽主義者",
+          "quote": "紐の真ん中まで行ったら、光が頭の真上にまるごとあった",
+          "shape": { "type": "motes", "p": [0, 39.4, 0], "spread": [5, 2, 5], "count": 8, "r": 0.5 }
+        }
+      ]
+    },
+    {
+      "id": "net",
+      "born": 9,
+      "by": "道具屋",
+      "name": "網",
+      "quote": "紐の下、一回だけ受け止めるやつ。二回目からはすり抜ける",
+      "shape": { "type": "net", "p": [0, 28, 0], "r": 26, "rings": 5, "spokes": 12 },
+      "color": "#7fd6c0",
+      "variants": [
+        {
+          "by": "深読み屋",
+          "quote": "二回目を許さないからだよ。許したら、誰も夜を怖がらなくなる",
+          "shape": { "type": "net", "p": [0, 26.5, 0], "r": 27.5, "rings": 3, "spokes": 12 }
+        }
+      ]
     },
     {
       "id": "hidden_side",

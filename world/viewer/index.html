@@ -244,6 +244,20 @@
         const o = new THREE.Mesh(new THREE.TubeGeometry(curve, 48, 0.22, 6, false), mat(color, { emissive: true, opacity: 0.8 }));
         g.add(o); break;
       }
+      case 'net': {
+        for (let i = 1; i <= shape.rings; i++) {
+          const o = new THREE.Mesh(new THREE.TorusGeometry(shape.r * (i / shape.rings), 0.12, 6, 60),
+            mat(color, { emissive: true, opacity: 0.4 }));
+          o.position.set(p[0], p[1], p[2]); o.rotation.x = Math.PI / 2; g.add(o);
+        }
+        for (let i = 0; i < shape.spokes; i++) {
+          const a = (i / shape.spokes) * Math.PI * 2;
+          const o = new THREE.Mesh(new THREE.BoxGeometry(shape.r, 0.1, 0.1), mat(color, { emissive: true, opacity: 0.3 }));
+          o.position.set(p[0] + Math.cos(a) * shape.r / 2, p[1], p[2] + Math.sin(a) * shape.r / 2);
+          o.rotation.y = -a; g.add(o);
+        }
+        break;
+      }
       case 'arc_up': {
         const a = new THREE.Vector3().fromArray(shape.from), b2 = new THREE.Vector3().fromArray(shape.to);
         const mid = a.clone().add(b2).multiplyScalar(0.5).setY((a.y + b2.y) / 2 + shape.lift);
