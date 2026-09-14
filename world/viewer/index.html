@@ -59,6 +59,7 @@
   <div class="round" id="roundLabel">巡 —</div>
   <h1>縁 の 生 き 物</h1>
   <div class="clockline" id="clock">昼</div>
+  <div class="clockline" id="stance">縁に立っている</div>
 </div>
 
 <div class="hud br">
@@ -67,7 +68,7 @@
 
 <div class="hud bl">
   <div class="quote" id="quote" hidden></div>
-  <div class="keys">W A S D 移動 ／ SPACE 上 ／ SHIFT 下 ／ マウス 視線 ／ ESC 解除</div>
+  <div class="keys" id="keys">W A S D 歩く ／ SPACE 跳ぶ ／ F 浮く ／ マウス 視線 ／ ESC 解除</div>
 </div>
 
 <div class="touch">
@@ -96,6 +97,8 @@
   const camera = new THREE.PerspectiveCamera(62, innerWidth / innerHeight, 0.1, 2000);
   camera.position.set(78, 62, 62);
   camera.lookAt(0, 40, 0);
+  const STILL = location.search.indexOf('still') >= 0;
+  const EYEVIEW = location.search.indexOf('eye') >= 0;   // 降り立った高さからの1枚
 
   const renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
@@ -113,6 +116,7 @@
   const crumbling = [];
   const pulsing = [];
   const pickable = [];
+  const colliders = [];   // 立てる面
 
   function mat(color, opts) {
     opts = opts || {};
@@ -299,7 +303,7 @@
     if (entity.only_daytime) daytimeOnly.push(g);
     if (entity.crumbles && !isVariant) crumbling.push(g);
     if (spec.pulse) pulsing.push(g);
-    g.traverse(o => { if (o.isMesh) { o.userData.owner = g; pickable.push(o); } });
+    g.traverse(o => { if (o.isMesh) { o.userData.owner = g; pickable.push(o); if (entity.solid && !isVariant) colliders.push(o); } });
     scene.add(g);
     return g;
   }
@@ -314,6 +318,7 @@
       (e.variants || []).forEach(v => place(e, v, v.by, true));
     });
     buildLegend();
+    body.ready = true;   // 地面ができるまで身体は落ちない
   });
 
   function buildLegend() {
@@ -335,14 +340,24 @@
 
   // ---- 視線と移動 -------------------------------------------------------
   const keys = {};
+  const EYE = 1.7, GRAV = 34, JUMP = 13, WALK = 11, FLY = 26;
+  const body = { mode: 'walk', vy: 0, ground: false, netLeft: 1, ready: false };
+  const SPAWN = new THREE.Vector3(35.2, 47.4 + EYE, 24.7);   // 縁の足場の上
+  const down = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, -1, 0), 0, 60);
+  const stanceEl = document.getElementById('stance');
   const euler = new THREE.Euler(0, 0, 0, 'YXZ');
   euler.setFromQuaternion(camera.quaternion);
   let locked = false, touchForward = 0;
 
   const startEl = document.getElementById('start');
-  if (location.search.indexOf('still') >= 0) {   // 静止画の書き出し用
+  if (STILL) {                      // 俯瞰の1枚を撮るときだけ、浮いたまま
     startEl.hidden = true;
     document.querySelector('.touch').style.display = 'none';
+    body.mode = 'fly';
+  } else {                          // 世界に降り立つ位置は縁の上
+    camera.position.copy(SPAWN);
+    camera.lookAt(24.7, 48.6, 35.2);   // 縁に沿って向こう側を向く
+    if (EYEVIEW) { startEl.hidden = true; document.querySelector('.touch').style.display = 'none'; }
   }
   renderer.domElement.addEventListener('click', () => renderer.domElement.requestPointerLock && renderer.domElement.requestPointerLock());
   startEl.addEventListener('click', () => renderer.domElement.requestPointerLock && renderer.domElement.requestPointerLock());
@@ -358,7 +373,10 @@
     euler.x = Math.max(-1.5, Math.min(1.5, euler.x));
     camera.quaternion.setFromEuler(euler);
   });
-  addEventListener('keydown', e => { keys[e.code] = true; });
+  addEventListener('keydown', e => {
+    keys[e.code] = true;
+    if (e.code === 'KeyF') { body.mode = body.mode === 'walk' ? 'fly' : 'walk'; body.vy = 0; }
+  });
   addEventListener('keyup', e => { keys[e.code] = false; });
 
   let dragging = null;
@@ -420,15 +438,47 @@
       h.position.set(Math.cos(a) * 46, 48, Math.sin(a) * 46);
     });
 
-    const speed = (keys.ShiftLeft || keys.ShiftRight ? 26 : 26) * dt;
     const fwd = new THREE.Vector3(); camera.getWorldDirection(fwd);
-    const right = new THREE.Vector3().crossVectors(fwd, camera.up).normalize();
-    if (keys.KeyW || keys.ArrowUp || touchForward === 1) camera.position.addScaledVector(fwd, speed);
-    if (keys.KeyS || keys.ArrowDown || touchForward === -1) camera.position.addScaledVector(fwd, -speed);
+    const flat = fwd.clone().setY(0).normalize();
+    const dir = body.mode === 'walk' ? flat : fwd;
+    const right = new THREE.Vector3().crossVectors(flat, camera.up).normalize();
+    const speed = (body.mode === 'walk' ? WALK : FLY) * dt;
+    if (keys.KeyW || keys.ArrowUp || touchForward === 1) camera.position.addScaledVector(dir, speed);
+    if (keys.KeyS || keys.ArrowDown || touchForward === -1) camera.position.addScaledVector(dir, -speed);
     if (keys.KeyA || keys.ArrowLeft) camera.position.addScaledVector(right, -speed);
     if (keys.KeyD || keys.ArrowRight) camera.position.addScaledVector(right, speed);
-    if (keys.Space) camera.position.y += speed;
-    if (keys.ShiftLeft || keys.ShiftRight) camera.position.y -= speed;
+
+    if (body.mode === 'fly') {
+      if (keys.Space) camera.position.y += speed;
+      if (keys.ShiftLeft || keys.ShiftRight) camera.position.y -= speed;
+      body.ground = false;
+      stanceEl.textContent = '浮いている';
+    } else if (body.ready) {
+      // 落ちる。夜には足場が溶けるので、そのぶんも落ちる
+      body.vy -= GRAV * dt;
+      camera.position.y += body.vy * dt;
+      down.ray.origin.copy(camera.position);
+      const floor = down.intersectObjects(colliders, false).find(h => h.object.userData.owner.visible);
+      body.ground = false;
+      if (floor && floor.distance <= EYE + Math.max(0, -body.vy * dt) && body.vy <= 0) {
+        camera.position.y = floor.point.y + EYE;
+        body.vy = 0; body.ground = true;
+        stanceEl.textContent = floor.object.userData.owner.userData.name + 'の上に立っている';
+      } else {
+        stanceEl.textContent = '落ちている';
+      }
+      // 網は一回だけ受け止める
+      const r = Math.hypot(camera.position.x, camera.position.z);
+      if (!body.ground && body.vy < 0 && r < 26 && camera.position.y < 28 + EYE && camera.position.y > 20) {
+        if (body.netLeft > 0) {
+          body.netLeft--; camera.position.y = 28 + EYE; body.vy = 0; body.ground = true;
+          stanceEl.textContent = '網が受け止めた（もう受けない）';
+        }
+      }
+      if (keys.Space && body.ground) { body.vy = JUMP; body.ground = false; }
+      // 底を抜けたら縁へ戻される
+      if (camera.position.y < -140) { camera.position.copy(SPAWN); body.vy = 0; }
+    }
 
     look += dt;
     if (look > 0.2) {

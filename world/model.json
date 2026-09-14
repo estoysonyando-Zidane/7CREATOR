@@ -88,7 +88,8 @@
         "tube": 0.4
       },
       "color": "#ffcf7a",
-      "emissive": true
+      "emissive": true,
+      "solid": true
     },
     {
       "id": "ledges",
@@ -138,7 +139,8 @@
           },
           "wire": true
         }
-      ]
+      ],
+      "solid": true
     },
     {
       "id": "far_ledges",
@@ -164,7 +166,8 @@
         ]
       },
       "color": "#6a7490",
-      "melts_at_night": true
+      "melts_at_night": true,
+      "solid": true
     },
     {
       "id": "dancers",
@@ -264,7 +267,8 @@
           },
           "wire": true
         }
-      ]
+      ],
+      "solid": true
     },
     {
       "id": "stone_today",
@@ -281,7 +285,8 @@
         ],
         "r": 2.6
       },
-      "color": "#ffd489"
+      "color": "#ffd489",
+      "solid": true
     },
     {
       "id": "stone_records",
@@ -302,7 +307,8 @@
         "axis": "z"
       },
       "color": "#6f7ca0",
-      "wire": true
+      "wire": true,
+      "solid": true
     },
     {
       "id": "ear",
@@ -398,7 +404,8 @@
             "h": 120
           }
         }
-      ]
+      ],
+      "solid": true
     },
     {
       "id": "debris",
@@ -479,7 +486,8 @@
         ],
         "r": 5
       },
-      "color": "#9fb0d6"
+      "color": "#9fb0d6",
+      "solid": true
     },
     {
       "id": "risen",
@@ -647,7 +655,8 @@
             "spokes": 8
           }
         }
-      ]
+      ],
+      "solid": true
     },
     {
       "id": "footprints",
