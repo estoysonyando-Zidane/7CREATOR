@@ -248,6 +248,14 @@
         const o = new THREE.Mesh(new THREE.TubeGeometry(curve, 48, 0.22, 6, false), mat(color, { emissive: true, opacity: 0.8 }));
         g.add(o); break;
       }
+      case 'spoke': {
+        const a = rad(shape.a), len = shape.r1 - shape.r0, mid = (shape.r0 + shape.r1) / 2;
+        const o = new THREE.Mesh(new THREE.BoxGeometry(len, shape.h, shape.width), m());
+        o.position.set(Math.cos(a) * mid + p[0], p[1], Math.sin(a) * mid + p[2]);
+        o.rotation.y = -a;
+        g.add(o);
+        break;
+      }
       case 'band': {
         const step = shape.step || 6;
         const inGap = a => (shape.gaps || []).some(g => a >= g[0] && a <= g[1]);
@@ -329,6 +337,7 @@
     model.entities.forEach(e => {
       const g = place(e, e, e.by, false);
       g.traverse(o => { if (o.name === 'hand') clockHands.push(o); });
+      if (e.boundary) BOUND = e.boundary;
       (e.variants || []).forEach(v => place(e, v, v.by, true));
     });
     buildLegend();
@@ -355,8 +364,10 @@
   // ---- 視線と移動 -------------------------------------------------------
   const keys = {};
   const EYE = 1.7, GRAV = 34, JUMP = 13, WALK = 11, FLY = 26;
-  const body = { mode: 'walk', vy: 0, ground: false, netLeft: 1, ready: false };
+  const body = { mode: 'walk', vy: 0, ground: false, netLeft: 1, ready: false, held: false };
+  let BOUND = 0;   // 果ての半径（7人が決めるまでは無い）
   const SPAWN = new THREE.Vector3(35.2, 47.4 + EYE, 24.7);   // 縁の足場の上
+  const hold = new THREE.Vector3();
   const down = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, -1, 0), 0, 60);
   const stanceEl = document.getElementById('stance');
   const euler = new THREE.Euler(0, 0, 0, 'YXZ');
@@ -490,6 +501,20 @@
         }
       }
       if (keys.Space && body.ground) { body.vy = JUMP; body.ground = false; }
+      // 果ての手すり。夜に掴んだ手は朝まで離せない
+      if (BOUND) {
+        const rr = Math.hypot(camera.position.x, camera.position.z);
+        if (rr > BOUND) {
+          const k = BOUND / rr;
+          camera.position.x *= k; camera.position.z *= k;
+          if (day < 0.35) body.held = true;
+          stanceEl.textContent = body.held ? '手すりが離してくれない' : '果ての手すりに触れている';
+        }
+        if (body.held) {
+          if (day > 0.55) body.held = false;
+          else { camera.position.x = hold.x; camera.position.z = hold.z; }
+        } else { hold.set(camera.position.x, 0, camera.position.z); }
+      }
       // 底を抜けたら縁へ戻される
       if (camera.position.y < -140) { camera.position.copy(SPAWN); body.vy = 0; }
     }
