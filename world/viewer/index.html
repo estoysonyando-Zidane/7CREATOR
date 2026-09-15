@@ -113,6 +113,7 @@
   const groups = {};   // 人格ごとの表示切り替え
   const melting = [];  // 夜に溶けるもの
   const daytimeOnly = [];
+  const nightOnly = [];
   const crumbling = [];
   const pulsing = [];
   const pickable = [];
@@ -248,6 +249,22 @@
         const o = new THREE.Mesh(new THREE.TubeGeometry(curve, 48, 0.22, 6, false), mat(color, { emissive: true, opacity: 0.8 }));
         g.add(o); break;
       }
+      case 'box': {
+        const o = new THREE.Mesh(new THREE.BoxGeometry(shape.size[0], shape.size[1], shape.size[2]), m());
+        o.position.set(p[0], p[1], p[2]);
+        if (shape.rot) o.rotation.set(shape.rot[0], shape.rot[1], shape.rot[2]);
+        else if (shape.face_center !== undefined) o.rotation.y = -Math.atan2(p[2], p[0]);
+        g.add(o); break;
+      }
+      case 'beam': {
+        const a = new THREE.Vector3().fromArray(shape.from), b2 = new THREE.Vector3().fromArray(shape.to);
+        const len = a.distanceTo(b2);
+        const o = new THREE.Mesh(new THREE.CylinderGeometry(shape.r0 || 1, shape.r1 || 3, len, 12, 1, true),
+          mat(color, { emissive: true, opacity: shape.opacity || 0.22 }));
+        o.position.copy(a).add(b2).multiplyScalar(0.5);
+        o.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), b2.clone().sub(a).normalize());
+        g.add(o); break;
+      }
       case 'spoke': {
         const a = rad(shape.a), len = shape.r1 - shape.r0, mid = (shape.r0 + shape.r1) / 2;
         const o = new THREE.Mesh(new THREE.BoxGeometry(len, shape.h, shape.width), m());
@@ -323,6 +340,7 @@
     (groups[author] = groups[author] || []).push(g);
     if (entity.melts_at_night && !isVariant) melting.push(g);
     if (entity.only_daytime) daytimeOnly.push(g);
+    if (entity.only_night) nightOnly.push(g);
     if (entity.crumbles && !isVariant) crumbling.push(g);
     if (spec.pulse) pulsing.push(g);
     g.traverse(o => { if (o.isMesh) { o.userData.owner = g; pickable.push(o); if (entity.solid && !isVariant) colliders.push(o); } });
@@ -453,6 +471,7 @@
       g.traverse(o => { if (o.isMesh && o.material.transparent !== undefined) { o.material.transparent = true; o.material.opacity = 0.12 + 0.88 * day; } });
     });
     daytimeOnly.forEach(g => { g.visible = day > 0.5 && g.userData.shown !== false; });
+    nightOnly.forEach(g => { g.visible = day < 0.4 && g.userData.shown !== false; });
     crumbling.forEach(g => {
       const k = (t % 12) / 12;
       g.scale.setScalar(k < 0.7 ? 0.2 + k : Math.max(0.02, 1.2 - (k - 0.7) * 4));
