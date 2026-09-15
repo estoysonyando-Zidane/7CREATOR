@@ -248,6 +248,20 @@
         const o = new THREE.Mesh(new THREE.TubeGeometry(curve, 48, 0.22, 6, false), mat(color, { emissive: true, opacity: 0.8 }));
         g.add(o); break;
       }
+      case 'band': {
+        const step = shape.step || 6;
+        const inGap = a => (shape.gaps || []).some(g => a >= g[0] && a <= g[1]);
+        for (let a = 0; a < 360; a += step) {
+          if (inGap(a) || inGap(a + step)) continue;
+          const mid = rad(a + step / 2);
+          const chord = 2 * shape.r * Math.sin(rad(step) / 2) + 0.2;
+          const o = new THREE.Mesh(new THREE.BoxGeometry(chord, shape.h, shape.width), m());
+          o.position.set(Math.cos(mid) * shape.r + p[0], p[1], Math.sin(mid) * shape.r + p[2]);
+          o.rotation.y = -mid;
+          g.add(o);
+        }
+        break;
+      }
       case 'trail': {
         for (let i = 0; i < shape.count; i++) {
           const a = rad(shape.from + (shape.to - shape.from) * (i / (shape.count - 1)));
